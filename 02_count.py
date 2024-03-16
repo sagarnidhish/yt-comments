@@ -11,4 +11,4 @@ total_comments = len(data)
 # Print the result
 print(f'Total number of comment entries: {total_comments}')
 
-print("Comment ID:", data[0]["id"])
+#print("Comment ID:", data[0]["id"])
