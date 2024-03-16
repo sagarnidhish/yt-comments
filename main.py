@@ -10,23 +10,30 @@ from datetime import datetime
 
 parser = argparse.ArgumentParser(description='Download comments from youtube')
 parser.add_argument(
-        '--videoId', type=str, help='url of the video after v=')
+#           'L_Guz73e6fw', type=str, help='url of the video after v=')
+           '--videoId', type=str, help='url of the video after v=')
 args = parser.parse_args()
-
+DEVELOPER_KEY = "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"
+#Personal:
+DEVELOPER_KEY = "AIzaSyBTJbMeUrI56SdPOoujXu642iJwmPaZf1E"
 # Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
 # tab of
 #   https://cloud.google.com/console
 # Please ensure that you have enabled the YouTube Data API for your project.
-DEVELOPER_KEY = yamjam()['yt_comments']['YOUTUBE_KEY']
+#DEVELOPER_KEY = yamjam()['yt_comments']['YOUTUBE_KEY']
+#DEVELOPER_KEY = yamjam()['yt_comments']['YOUTUBE_KEY']
+
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
-YOUTUBE_URL_PREFIX = 'https://www.youtube.com/watch?v='
+#YOUTUBE_URL_PREFIX = 'https://www.youtube.com/watch?v='
+YOUTUBE_URL_PREFIX = 'https://www.youtube.com/watch?v=L_Guz73e6fw'
 
 youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
         developerKey=DEVELOPER_KEY)
 
 _MAX_RESULTS_PER_QUERY = 100
+
 
 
 def get_comment_threads(kwagrs):
@@ -54,7 +61,8 @@ def parse_item(snippet):
     comment['user_name'] = snippet['snippet']['authorDisplayName']
     comment['timestamp'] = int(datetime.strptime(
         snippet['snippet']['publishedAt'],
-        '%Y-%m-%dT%H:%M:%S.000Z').timestamp() * 1000)
+        '%Y-%m-%dT%H:%M:%S%z').timestamp() * 1000)
+#     '%Y-%m-%dT%H:%M:%S.000Z').timestamp() * 1000)
 
     comment['comment'] = snippet['snippet']['textOriginal']
     comment['likes'] = snippet['snippet']['likeCount']
@@ -134,9 +142,11 @@ if __name__ == "__main__":
     except AttributeError as e:
         sys.stderr.write('Please specify id of the video.\n')
         sys.exit(1)
-
+    video_id = 'L_Guz73e6fw'
     comments = download_comments(video_id)
+    write_comments_to_file(comments, "comments.json")
+    print("Comments have been written to comments.json")
 
     json.dump(comments, sys.stdout)
-    print()
+#    print()
 
